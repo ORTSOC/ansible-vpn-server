@@ -1,2 +1,2 @@
 # ansible-vpn-server
-ORTSOC Infra Playbook: VPN Server
+ORTSOC Infra Role: VPN Server
