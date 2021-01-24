@@ -1,5 +1,5 @@
 ---
-
+# wireguard is not included in debian 10, but is in debian 11. buster-backports gives us access to debian 11 packages.
 - name: Add buster-backports repository into sources list for wireguard
   apt_repository:
     repo: deb http://deb.debian.org/debian buster-backports main
@@ -10,32 +10,20 @@
   become: yes
   apt:
     name: wireguard
- 
+
+# enable the wireguard kernel module so we can enable logging for it.
 - name: enable wireguard kernel module
   become: yes
   modprobe:
     name: wireguard
     state: present  
 
+# runs every time, this is okay.
 - name: enable wireguard logging
   become: yes
   shell: echo 'module wireguard +p' > /sys/kernel/debug/dynamic_debug/control
 
- #keygen script stuff
-- name: make keygen directory
-  become: yes
-  file:
-    path: /root/.wireguard # change dir to whatever is standard
-    state: directory
-    mode: '077'
-
-- name: generate keys if 'privatekey' does not exist
-  become: yes
-  shell: wg genkey | tee privatekey | wg pubkey > publickey  
-  args:  
-    chdir: /root/.wireguard
-    creates: /root/.wireguard/privatekey
-
+# forward packets from the network-facing interface to the WireGuard interface
 - name: enable ip forwarding for vpn server
   become: yes
   sysctl:
@@ -43,6 +31,7 @@
     value: '1'
     sysctl_set: yes
 
+# generate config from vars
 - name: load config
   become: yes
   template:
@@ -53,11 +42,10 @@
     mode: "0644"
   notify: "live config reload"
 
+# manage the systemctl service
 - name: enable and start wireguard service
   become: yes
   service: 
     name: wg-quick@wg0
     enabled: yes
     state: started
-
-    
