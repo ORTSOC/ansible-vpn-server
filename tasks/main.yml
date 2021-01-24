@@ -1,29 +1,26 @@
 ---
 - name: install wireguard
-  
-  tasks:
-  - name: install wireguard
-    become: yes
-    apt:
-      name: wireguard
+  become: yes
+  apt:
+    name: wireguard
  
  # set config files here:
  
  
  #keygen script stuff
-  - name: make keygen directory
-    become: yes
-    file:
-      path: /root/.wireguard # change dir to whatever is standard
-      state: directory
-      mode: '077'
- 
-  - name: generate keys if 'privatekey' does not exist
-    become: yes
-    shell: wg genkey | tee privatekey | wg pubkey > publickey  
-    args:  
-      chdir: /root/.wireguard
-      creates: /root/.wireguard/privatekey
+- name: make keygen directory
+  become: yes
+  file:
+    path: /root/.wireguard # change dir to whatever is standard
+    state: directory
+    mode: '077'
+
+- name: generate keys if 'privatekey' does not exist
+  become: yes
+  shell: wg genkey | tee privatekey | wg pubkey > publickey  
+  args:  
+    chdir: /root/.wireguard
+    creates: /root/.wireguard/privatekey
 
  # Not yet working
   #- name: start wireguard service
