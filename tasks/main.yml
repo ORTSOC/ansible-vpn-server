@@ -29,10 +29,26 @@
     chdir: /root/.wireguard
     creates: /root/.wireguard/privatekey
 
- # Not yet working
-  #- name: start wireguard service
-  #  become: yes
-  #  service: 
-  #    name: wg-quick@wg0
-  #    state: started
+- name: enable ip forwarding for vpn server
+  become: yes
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
+# - name: install config
+#   template:
+#     src: wg0.conf.j2
+#     dest: /etc/wireguard/wg0.conf
+#     owner: root
+#     group: root
+#     mode: "0644"
+
+#  # Not yet working
+# - name: enable and start wireguard service
+#   become: yes
+#   systemd: 
+#     name: wg-quick@wg0
+#     enabled: yes
+#     state: started
+
     
