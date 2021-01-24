@@ -1,0 +1,18 @@
+[Interface]
+Address = {{ vpn_server_address }}/24
+ListenPort = {{ vpn_server_port }}
+PrivateKey = {{ vpn_server_private_key }}
+
+{% if net_interface %}
+# if the server is behind a router and receives traffic via NAT, these iptables rules are not needed
+PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o {{ net_interface }} -j MASQUERADE
+PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o {{ net_interface }} -j MASQUERADE
+{% endif %}
+
+# Allow access from clients
+{% for peer in peers %}
+[Peer]
+PublicKey = {{ peer.public_key }}
+AllowedIPs = {{ peer.addr }}/32
+
+{% endfor %}

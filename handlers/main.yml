@@ -1,2 +1,6 @@
 ---
 # handlers file for ansible-vpn
+
+- name: live config reload
+  become: yes
+  shell: wg syncconf wg0 <(wg-quick strip wg0)

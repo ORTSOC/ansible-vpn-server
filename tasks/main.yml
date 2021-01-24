@@ -11,9 +11,16 @@
   apt:
     name: wireguard
  
- # set config files here:
- 
- 
+- name: enable wireguard kernel module
+  become: yes
+  modprobe:
+    name: wireguard
+    state: present  
+
+- name: enable wireguard logging
+  become: yes
+  shell: echo 'module wireguard +p' > /sys/kernel/debug/dynamic_debug/control
+
  #keygen script stuff
 - name: make keygen directory
   become: yes
@@ -35,20 +42,22 @@
     name: net.ipv4.ip_forward
     value: '1'
     sysctl_set: yes
-# - name: install config
-#   template:
-#     src: wg0.conf.j2
-#     dest: /etc/wireguard/wg0.conf
-#     owner: root
-#     group: root
-#     mode: "0644"
 
-#  # Not yet working
-# - name: enable and start wireguard service
-#   become: yes
-#   systemd: 
-#     name: wg-quick@wg0
-#     enabled: yes
-#     state: started
+- name: load config
+  become: yes
+  template:
+    src: wg0.conf.j2
+    dest: /etc/wireguard/wg0.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: "live config reload"
+
+- name: enable and start wireguard service
+  become: yes
+  service: 
+    name: wg-quick@wg0
+    enabled: yes
+    state: started
 
     
