@@ -1,4 +1,11 @@
 ---
+
+- name: Add buster-backports repository into sources list for wireguard
+  apt_repository:
+    repo: deb http://deb.debian.org/debian buster-backports main
+    state: present
+    update_cache: yes
+
 - name: install wireguard
   become: yes
   apt:
