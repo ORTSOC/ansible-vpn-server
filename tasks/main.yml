@@ -1,6 +1,5 @@
 ---
 - name: install wireguard
-  hosts: vpn
   
   tasks:
   - name: install wireguard
