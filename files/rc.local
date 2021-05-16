@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/sh -e
 
 # persist wireguard debug logging on reboot
 echo 'module wireguard +p' > /sys/kernel/debug/dynamic_debug/control
+exit 0

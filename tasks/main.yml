@@ -52,9 +52,9 @@
   notify: restart rsyslog
 
   # enable debug log filtering
-- name: transfer rsyslog wireguard conf
+- name: add rc.local startup script
   ansible.builtin.copy:
-    src: wireguard_debug.sh
+    src: rc.local
     dest: /etc/rc.local
     owner: root
     group: root
