@@ -16,6 +16,7 @@ Role Variables
 * `vpn_server_private_key`: base64 key, best generated with "wg genkey".
 * `vpn_server_address`: The WireGuard internal address that peers/clients will use for communication after establishing initial connection. This cannot be the actual address on the network, this is an address that we choose.
 * `vpn_server_port`: The port that clients will connect over to establish an initial connection.
+* `net_interface`: (OPTIONAL) Remove this if "the server is behind a router and receives traffic via NAT". If not, run "ip link" to get this.
 * `peers`:
     * An object list, one for each client that will be connecting over wireguard, each with the following keys:
         *`public_key`: a base64 public key for the client/peer's WireGuard instance
@@ -38,6 +39,9 @@ vpn_server_port: 51820
 # Optional. Remove this if "the server is behind a router and receives traffic via NAT"
 # If not, run "ip link" and find the network interface name. Will be something like enp0, ens33, etc.
 net_interface: ens192
+
+# the private key to decrypt traffic from that is encrypted with the public key
+vpn_private_key: aaaaaaaaaaaaaaaaaaaaaaaa=
 
 # list of peers that the VPN server will accept connections from.
 #     public_key - the base64 public key provided by the peer for their own wireguard instance.
