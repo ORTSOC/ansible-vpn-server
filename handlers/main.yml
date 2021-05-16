@@ -4,3 +4,10 @@
 - name: live config reload
   become: yes
   shell: wg syncconf wg0 <(wg-quick strip wg0)
+
+- name: restart rsyslog
+  become: yes
+  service: 
+    name: rsyslog
+    enabled: yes
+    state: started

@@ -42,6 +42,24 @@
     mode: "0644"
   notify: "live config reload"
 
+# enable debug log filtering
+- name: transfer rsyslog wireguard conf
+  ansible.builtin.copy:
+    src: wireguard.conf
+    dest: /etc/rsyslog.d/wireguard.conf
+    owner: root
+    group: root
+  notify: restart rsyslog
+
+  # enable debug log filtering
+- name: transfer rsyslog wireguard conf
+  ansible.builtin.copy:
+    src: wireguard_debug.sh
+    dest: /etc/rc.local
+    owner: root
+    group: root
+    mode: "0755"
+
 # manage the systemctl service
 - name: enable and start wireguard service
   become: yes
